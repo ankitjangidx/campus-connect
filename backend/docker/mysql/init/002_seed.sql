@@ -1,0 +1,120 @@
+-- USE campus_connect;
+
+-- INSERT INTO users (
+--   id,
+--   username,
+--   user_identifier,
+--   email,
+--   password_hash,
+--   first_name,
+--   last_name,
+--   bio,
+--   dob,
+--   gender,
+--   phone_number,
+--   alternate_phone,
+--   course,
+--   branch,
+--   admission_year,
+--   exam_prep,
+--   exam_type,
+--   other_exam,
+--   internships,
+--   projects,
+--   work_experiences,
+--   skills
+-- ) VALUES
+--   (
+--     2,
+--     'Neha Singh',
+--     'neha24',
+--     'neha@campusconnect.dev',
+--     '236977126d6375b9fa5f7ec7d7d7055cf36741c990d9c788f68a8427b08cdf08',
+--     'Neha',
+--     'Singh',
+--     'Data science enthusiast focused on analytics, case competitions, and CAT preparation.',
+--     '2003-08-21',
+--     'Female',
+--     '+91-9810020202',
+--     '',
+--     'BCA',
+--     'DS',
+--     2022,
+--     'yes',
+--     'CAT',
+--     '',
+--     '[{"company":"Insight Analytics","role":"Data Intern","duration":"8 weeks","location":"Delhi","responsibilities":"Created dashboards and cleaned admissions datasets."}]',
+--     '[{"name":"Placement Predictor","github":"https://github.com/campus-connect/placement-predictor","description":"Prediction tool for placement readiness using student signals.","tech":"Python, Pandas, Streamlit"}]',
+--     '[{"company":"Case Circle","role":"Research Lead","duration":"Aug 2024 - Present","address":"North Campus"}]',
+--     '[{"skillName":"SQL","proficiencyLevel":"Advanced","certification":"Data Analyst Associate","issuedBy":"Microsoft"},{"skillName":"Power BI","proficiencyLevel":"Intermediate","certification":"","issuedBy":""}]'
+--   ),
+--   (
+--     3,
+--     'Rohit Verma',
+--     'rohit22',
+--     'rohit@campusconnect.dev',
+--     '49d6e178c28d22adcf018111669cd921fe07dd2307be14a784f90d5c0245483f',
+--     'Rohit',
+--     'Verma',
+--     'AI and backend mentor helping students ship portfolio projects with strong engineering hygiene.',
+--     '2002-11-02',
+--     'Male',
+--     '+91-9810030303',
+--     '',
+--     'M.Tech',
+--     'CS-AI',
+--     2021,
+--     'yes',
+--     'Civil Services',
+--     '',
+--     '[{"company":"Vision Forge","role":"ML Intern","duration":"12 weeks","location":"Bengaluru","responsibilities":"Trained recommendation models and wrote evaluation tooling."}]',
+--     '[{"name":"Mentor Match","github":"https://github.com/campus-connect/mentor-match","description":"Recommendation engine for pairing juniors with campus mentors.","tech":"Node.js, Express, MySQL"}]',
+--     '[{"company":"Research Lab","role":"Graduate Assistant","duration":"2024 - Present","address":"AI Block"}]',
+--     '[{"skillName":"Node.js","proficiencyLevel":"Advanced","certification":"","issuedBy":""},{"skillName":"Machine Learning","proficiencyLevel":"Advanced","certification":"TensorFlow Developer","issuedBy":"Google"}]'
+--   ),
+--   (
+--     4,
+--     'Ananya Sharma',
+--     'ananya25',
+--     'ananya@campusconnect.dev',
+--     '4f61906e924ccd453e000ffd8a46999d71a9467200a40dcf1c84c2a87c5febdb',
+--     'Ananya',
+--     'Sharma',
+--     'Campus community builder interested in peer support, student clubs, and product storytelling.',
+--     '2005-01-09',
+--     'Female',
+--     '+91-9810040404',
+--     '',
+--     'MCA',
+--     'IT',
+--     2024,
+--     'no',
+--     '',
+--     '',
+--     '[]',
+--     '[{"name":"ClubHub","github":"https://github.com/campus-connect/clubhub","description":"A directory of clubs, events, and volunteer roles.","tech":"Vue, Firebase"}]',
+--     '[{"company":"Campus Media Cell","role":"Content Strategist","duration":"2025 - Present","address":"Student Activity Center"}]',
+--     '[{"skillName":"Community Ops","proficiencyLevel":"Advanced","certification":"","issuedBy":""},{"skillName":"Figma","proficiencyLevel":"Intermediate","certification":"","issuedBy":""}]'
+--   );
+
+-- INSERT INTO connections (
+--   user_one_id,
+--   user_two_id,
+--   status,
+--   requested_by_id,
+--   accepted_at
+-- ) VALUES
+--   (2, 3, 'accepted', 2, '2026-01-10 10:00:00'),
+--   (2, 4, 'accepted', 4, '2026-01-15 16:30:00');
+
+-- INSERT INTO messages (sender_id, recipient_id, body) VALUES
+--   (2, 3, 'Rohit, can you review my SQL schema choices for the analytics dashboard this weekend?'),
+--   (3, 2, 'Yes. Share the current schema and I will suggest indexes plus service-layer changes.');
+
+-- INSERT INTO questions (user_id, title, description, category, resolved) VALUES
+--   (2, 'How should I prepare for CAT alongside semester exams?', 'I am balancing labs, assignments, and CAT prep. Looking for a realistic weekly plan from seniors who managed both.', 'career', 0),
+--   (3, 'What is the best way to document a backend portfolio project?', 'I want my GitHub repositories to look recruiter-ready. What sections matter most in the README and API docs?', 'academic', 0),
+--   (4, 'Which campus spaces are best for group mentoring sessions?', 'I am organizing peer support circles and need quiet, reliable spaces with power outlets.', 'campus', 1);
+
+-- INSERT INTO mentorships (mentor_id, mentee_name, focus_area, started_at, notes) VALUES
+--   (3, 'Sanya Gupta', 'Backend architecture', '2025-10-18', 'Guided service-layer refactor for a hackathon project.');

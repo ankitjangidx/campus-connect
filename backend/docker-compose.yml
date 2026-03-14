@@ -1,0 +1,49 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: campus-connect-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: campus_connect
+      MYSQL_USER: campus_user
+      MYSQL_PASSWORD: campus_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      FRONTEND_ORIGIN: http://localhost:5173
+      JWT_SECRET: campus-connect-docker-secret
+      COOKIE_SECURE: "false"
+      COOKIE_SAME_SITE: lax
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: campus_connect
+      DB_USER: campus_user
+      DB_PASSWORD: campus_password
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SECURE: ${SMTP_SECURE}
+      MAIL_FROM: ${MAIL_FROM:-Campus Connect <no-reply@campusconnect.local>}
+    ports:
+      - "3000:3000"
+
+volumes:
+  mysql-data:
