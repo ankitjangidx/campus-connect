@@ -1,8 +1,7 @@
 const {
   getSessionUserById,
   loginUser,
-  registerUser,
-  requestRegistrationOtp
+  registerUser
 } = require("../services/dataService");
 const asyncHandler = require("../utils/asyncHandler");
 const {
@@ -15,11 +14,6 @@ function setAuthCookie(res, userId) {
   const token = signAuthToken(userId);
   res.cookie(AUTH_COOKIE_NAME, token, buildAuthCookieOptions());
 }
-
-const requestOtp = asyncHandler(async (req, res) => {
-  const result = await requestRegistrationOtp(req.body);
-  res.status(201).json(result);
-});
 
 const login = asyncHandler(async (req, res) => {
   const user = await loginUser(req.body);
@@ -47,6 +41,5 @@ module.exports = {
   getCurrentSession,
   login,
   logout,
-  requestOtp,
   register
 };

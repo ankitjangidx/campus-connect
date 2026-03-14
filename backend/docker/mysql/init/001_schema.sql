@@ -79,16 +79,6 @@ CREATE TABLE IF NOT EXISTS question_comments (
   CONSTRAINT fk_question_comments_parent FOREIGN KEY (parent_id) REFERENCES question_comments(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS email_otps (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  email VARCHAR(255) NOT NULL,
-  purpose VARCHAR(50) NOT NULL,
-  otp_hash VARCHAR(255) NOT NULL,
-  expires_at DATETIME NOT NULL,
-  used_at DATETIME NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS mentorships (
   id INT AUTO_INCREMENT PRIMARY KEY,
   mentor_id INT NOT NULL,

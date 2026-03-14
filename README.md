@@ -15,27 +15,10 @@ Campus Connect is now organized as a React frontend, an Express API backed by Se
 - `rohit22` / `forum123`
 - `ananya25` / `career123`
 
-## OTP and Realtime Messaging
+## Signup and Realtime Messaging
 
-- Registration now requires an email OTP sent through Nodemailer
-- Direct messaging now uses Socket.IO and is limited to users already connected with you
-
-Configure SMTP in `backend/.env.example` values before using OTP mail in a real environment:
-
-- `SMTP_HOST`
-- `SMTP_PORT`
-- `SMTP_SECURE`
-- `SMTP_USER`
-- `SMTP_PASS`
-- `MAIL_FROM`
-
-If you already have an older MySQL Docker volume, recreate it so the new `email_otps` table is created:
-
-```bash
-cd backend
-docker compose down -v
-docker compose up --build
-```
+- Users can sign up directly (no OTP email step)
+- Direct messaging uses Socket.IO and is limited to users already connected with you
 
 ## Run with Docker
 

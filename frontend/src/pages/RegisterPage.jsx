@@ -3,7 +3,6 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import LoadingState from "../components/LoadingState";
 import { useAuth } from "../context/AuthContext";
-import { api } from "../lib/api";
 
 const courseOptions = ["B.Tech", "M.Tech", "BCA", "MCA", "MSc"];
 const branchOptions = ["CS", "CS-AI", "IT", "DS"];
@@ -22,10 +21,6 @@ function RegisterPage() {
     branch: ""
   });
   const [error, setError] = useState("");
-  const [otpCode, setOtpCode] = useState("");
-  const [otpSending, setOtpSending] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpInfo, setOtpInfo] = useState("");
 
   if (!ready) {
     return <LoadingState label="Checking session..." />;
@@ -48,18 +43,12 @@ function RegisterPage() {
       return;
     }
 
-    if (!otpSent || !otpCode.trim()) {
-      setError("Send the OTP to your email and enter it before registering");
-      return;
-    }
-
     try {
       await register({
         username: form.username,
         userId: form.userId,
         email: form.email,
         password: form.password,
-        otpCode,
         admissionYear: form.admissionYear,
         course: form.course,
         branch: form.branch
@@ -67,30 +56,6 @@ function RegisterPage() {
       navigate("/dashboard");
     } catch (requestError) {
       setError(requestError.message);
-    }
-  }
-
-  async function handleSendOtp() {
-    setError("");
-
-    if (!form.email.trim()) {
-      setError("Enter your email first");
-      return;
-    }
-
-    setOtpSending(true);
-    setOtpInfo("");
-
-    try {
-      const response = await api.post("/auth/request-otp", {
-        email: form.email
-      });
-      setOtpSent(true);
-      setOtpInfo(`OTP sent to ${response.email}`);
-    } catch (requestError) {
-      setError(requestError.message);
-    } finally {
-      setOtpSending(false);
     }
   }
 
@@ -148,35 +113,6 @@ function RegisterPage() {
               />
             </label>
           </div>
-
-          <div className="grid gap-4 md:grid-cols-[1fr,180px]">
-            <label className="block">
-              <span className="mb-1.5 block text-[13px] text-gray-600">OTP</span>
-              <input
-                className="cc-input"
-                value={otpCode}
-                onChange={(event) => setOtpCode(event.target.value)}
-                placeholder="Enter 6-digit OTP"
-              />
-            </label>
-
-            <div className="flex items-end">
-              <button
-                className="w-full rounded-[10px] border border-[#6a5cf5] px-4 py-[13px] text-sm font-semibold text-[#6a5cf5]"
-                type="button"
-                onClick={handleSendOtp}
-                disabled={otpSending}
-              >
-                {otpSending ? "Sending..." : otpSent ? "Resend OTP" : "Send OTP"}
-              </button>
-            </div>
-          </div>
-
-          {otpInfo ? (
-            <div className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
-              {otpInfo}
-            </div>
-          ) : null}
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">

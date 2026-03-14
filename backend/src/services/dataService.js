@@ -1,6 +1,5 @@
 const {
   Connection,
-  EmailOtp,
   Mentorship,
   Message,
   Notification,
@@ -10,7 +9,6 @@ const {
   User
 } = require("../models");
 const { comparePassword, hashPassword } = require("../utils/password");
-const { sendOtpEmail } = require("./mailService");
 const {
   buildProfileStatus,
   normalizeUserModel,
@@ -33,10 +31,6 @@ function normalizeId(value, label) {
 
 function normalizeArray(value) {
   return Array.isArray(value) ? value.filter(Boolean) : [];
-}
-
-function generateOtpCode() {
-  return String(Math.floor(100000 + Math.random() * 900000));
 }
 
 function mapMessage(message) {
@@ -244,90 +238,6 @@ async function createNotificationRecord(payload) {
   return mapNotification(populatedNotification || notification);
 }
 
-async function requestRegistrationOtp({ email }) {
-  const normalizedEmail = email?.trim().toLowerCase();
-
-  if (!normalizedEmail) {
-    const error = new Error("Email is required");
-    error.statusCode = 400;
-    throw error;
-  }
-
-  const existing = await User.findOne({
-    where: { email: normalizedEmail }
-  });
-
-  if (existing) {
-    const error = new Error("A user with that email already exists");
-    error.statusCode = 409;
-    throw error;
-  }
-
-  const otpCode = generateOtpCode();
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
-  await EmailOtp.update(
-    { usedAt: new Date() },
-    {
-      where: {
-        email: normalizedEmail,
-        purpose: "register",
-        usedAt: null
-      }
-    }
-  );
-
-  await EmailOtp.create({
-    email: normalizedEmail,
-    purpose: "register",
-    otpHash: hashPassword(otpCode),
-    expiresAt
-  });
-
-  await sendOtpEmail({
-    email: normalizedEmail,
-    otpCode
-  });
-
-  return {
-    email: normalizedEmail,
-    expiresAt: expiresAt.toISOString()
-  };
-}
-
-async function consumeOtp({ email, purpose, otpCode }) {
-  const normalizedEmail = email?.trim().toLowerCase();
-  const trimmedOtp = otpCode?.trim();
-
-  if (!normalizedEmail || !trimmedOtp) {
-    const error = new Error("Email and OTP are required");
-    error.statusCode = 400;
-    throw error;
-  }
-
-  const otpRecord = await EmailOtp.findOne({
-    where: {
-      email: normalizedEmail,
-      purpose,
-      usedAt: null,
-      expiresAt: {
-        [Op.gt]: new Date()
-      }
-    },
-    order: [["created_at", "DESC"]]
-  });
-
-  if (!otpRecord || otpRecord.otpHash !== hashPassword(trimmedOtp)) {
-    const error = new Error("Invalid or expired OTP");
-    error.statusCode = 400;
-    throw error;
-  }
-
-  await otpRecord.update({
-    usedAt: new Date()
-  });
-}
-
 async function loginUser({ identifier, password }) {
   if (!identifier || !password) {
     const error = new Error("Identifier and password are required");
@@ -348,13 +258,10 @@ async function loginUser({ identifier, password }) {
 }
 
 async function registerUser(payload) {
-  const { username, userId, email, password, admissionYear, course, branch, otpCode } =
-    payload;
+  const { username, userId, email, password, admissionYear, course, branch } = payload;
 
-  if (!username || !userId || !email || !password || !otpCode) {
-    const error = new Error(
-      "Username, user ID, email, password, and OTP are required"
-    );
+  if (!username || !userId || !email || !password) {
+    const error = new Error("Username, user ID, email, and password are required");
     error.statusCode = 400;
     throw error;
   }
@@ -373,12 +280,6 @@ async function registerUser(payload) {
     error.statusCode = 409;
     throw error;
   }
-
-  await consumeOtp({
-    email,
-    purpose: "register",
-    otpCode
-  });
 
   const userModel = await User.create({
     username: username.trim(),
@@ -1503,7 +1404,6 @@ module.exports = {
   markConversationRead,
   markNotificationsRead,
   markQuestionNotificationsRead,
-  requestRegistrationOtp,
   registerUser,
   resolveQuestionComment,
   updateQuestionComment,

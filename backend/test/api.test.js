@@ -57,7 +57,6 @@ function createServiceMocks(overrides = {}) {
     markNotificationsRead: async () => ({ readIds: [], unreadCount: 0 }),
     markQuestionNotificationsRead: async () => ({ readIds: [], unreadCount: 0 }),
     registerUser: defaultAsyncMock("registerUser"),
-    requestRegistrationOtp: defaultAsyncMock("requestRegistrationOtp"),
     resolveQuestionComment: defaultAsyncMock("resolveQuestionComment"),
     updateQuestionComment: defaultAsyncMock("updateQuestionComment"),
     updateProfile: defaultAsyncMock("updateProfile"),
@@ -270,27 +269,6 @@ test("POST /api/auth/login returns the user and sets the auth cookie", async () 
   });
 });
 
-test("POST /api/auth/request-otp proxies to the OTP service", async () => {
-  const { app } = createTestApp({
-    dataService: {
-      async requestRegistrationOtp(payload) {
-        assert.deepEqual(payload, { email: "user@example.com" });
-        return { email: payload.email, expiresAt: "2026-03-14T12:00:00.000Z" };
-      }
-    }
-  });
-
-  const response = await request(app)
-    .post("/api/auth/request-otp")
-    .send({ email: "user@example.com" });
-
-  assert.equal(response.status, 201);
-  assert.deepEqual(response.body, {
-    email: "user@example.com",
-    expiresAt: "2026-03-14T12:00:00.000Z"
-  });
-});
-
 test("POST /api/auth/register returns the new user and sets the auth cookie", async () => {
   let receivedPayload;
   const { app } = createTestApp({
@@ -306,8 +284,7 @@ test("POST /api/auth/register returns the new user and sets the auth cookie", as
     username: "new-user",
     userId: "cc-12",
     email: "new@example.com",
-    password: "secret",
-    otpCode: "123456"
+    password: "secret"
   });
 
   assert.equal(response.status, 201);

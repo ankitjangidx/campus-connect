@@ -2,7 +2,6 @@ const { Op } = require("sequelize");
 
 const { sequelize } = require("../config/db");
 const defineConnection = require("./Connection");
-const defineEmailOtp = require("./EmailOtp");
 const defineMentorship = require("./Mentorship");
 const defineMessage = require("./Message");
 const defineNotification = require("./Notification");
@@ -12,7 +11,6 @@ const defineUser = require("./User");
 
 const User = defineUser(sequelize);
 const Connection = defineConnection(sequelize);
-const EmailOtp = defineEmailOtp(sequelize);
 const Message = defineMessage(sequelize);
 const Notification = defineNotification(sequelize);
 const Question = defineQuestion(sequelize);
@@ -104,7 +102,6 @@ module.exports = {
   Op,
   User,
   Connection,
-  EmailOtp,
   Message,
   Notification,
   Question,

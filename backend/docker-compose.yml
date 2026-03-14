@@ -36,12 +36,6 @@ services:
       DB_NAME: campus_connect
       DB_USER: campus_user
       DB_PASSWORD: campus_password
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_USER: ${SMTP_USER}
-      SMTP_PASS: ${SMTP_PASS}
-      SMTP_PORT: ${SMTP_PORT}
-      SMTP_SECURE: ${SMTP_SECURE}
-      MAIL_FROM: ${MAIL_FROM:-Campus Connect <no-reply@campusconnect.local>}
     ports:
       - "3000:3000"
 
